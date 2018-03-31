@@ -195,11 +195,11 @@ extension Lexer: IteratorProtocol, Sequence {
         }
 
         // Check for string literals.
-        if c == "\"" {
+        if c == "\"" || c == "'" {
             skip()
 
             let startIndex = charIndex
-            while currentChar != "\"" {
+            while currentChar != c {
                 // Make sure the stream isn't depleted.
                 guard charIndex < characters.endIndex else {
                     depleted = true
@@ -213,9 +213,9 @@ extension Lexer: IteratorProtocol, Sequence {
                     skip(2)
                 }
             }
-            skip()
 
             let value = String(characters[startIndex ..< charIndex])
+            skip()
             return Token(kind: .string, value: value, range: range(from: startLocation))
         }
 
