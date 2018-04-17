@@ -87,7 +87,7 @@ public class FunDecl: NamedNode {
         attributes: Set<MemberAttribute>,
         asynchronous: Bool,
         parameters: [ParamDecl],
-        returnAnnotation: Node?,
+        returnMutability: MutabilityQualifer,
         body: Block,
         range: SourceRange)
     {
@@ -95,7 +95,7 @@ public class FunDecl: NamedNode {
         self.attributes = attributes
         self.asynchronous = asynchronous
         self.parameters = parameters
-        self.returnAnnotation = returnAnnotation
+        self.returnMutability = returnMutability
         self.body = body
         self.range = range
     }
@@ -108,8 +108,8 @@ public class FunDecl: NamedNode {
     public var asynchronous: Bool
     /// The parameters of the function.
     public var parameters: [ParamDecl]
-    /// The return annotation of the function.
-    public var returnAnnotation: Node?
+    /// The mutability qualifier of the function return.
+    public var returnMutability: MutabilityQualifer
     /// The body of the function.
     public var body: Block
     /// The range in the source file of the concrete syntax this node represents.

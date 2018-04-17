@@ -49,11 +49,8 @@ extension FunDecl {
         result += "function \(name)"
         result += "("
         result += parameters.map({ $0.prettyDescription }).joined(separator: ", ")
-        result += ")"
-        if let annotation = returnAnnotation {
-            result += ": \(annotation.prettyDescription)"
-        }
-        result += " \(body.prettyDescription)"
+        result += "): \(returnMutability.rawValue) "
+        result += body.prettyDescription
         return result
     }
 
