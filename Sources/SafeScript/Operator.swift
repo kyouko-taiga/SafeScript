@@ -79,6 +79,24 @@ public enum InfixOperator: String, CustomStringConvertible {
 
     case or         = "||"
 
+    /// Returns the precedence group of the operator.
+    public var precedence: Int {
+        switch self {
+        case .or                        : return 0
+        case .and                       : return 1
+        case .bor                       : return 2
+        case .bxor                      : return 3
+        case .band                      : return 4
+        case .eq, .ne, .seq, .sne       : return 5
+        case .contains, .instanceof     : return 6
+        case .lt, .le, .ge, .gt         : return 7
+        case .lshift, .rshift, .urshift : return 8
+        case .add, .sub                 : return 9
+        case .mul, .div, .mod           : return 10
+        case .pow                       : return 11
+        }
+    }
+
     public var description: String { return rawValue }
 
 }
