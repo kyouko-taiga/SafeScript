@@ -17,7 +17,7 @@ extension Parser {
     /// but the delimiter won't.
     func parseList<Element>(
         delimitedBy delimiter: TokenKind,
-        parsingElementWith parse: () throws -> Element)
+        parsingItemsWith parse: () throws -> Element)
         rethrows -> [Element]
     {
         // Skip leading new lines.
