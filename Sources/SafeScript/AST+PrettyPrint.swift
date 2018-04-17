@@ -282,7 +282,9 @@ extension SubscriptExpr {
 extension Argument {
 
     public var prettyDescription: String {
-        return "\(label) \(op) \(value.prettyDescription)"
+        return byReference
+            ? "&\(value.prettyDescription)"
+            : value.prettyDescription
     }
 
 }
