@@ -80,6 +80,7 @@ public enum TokenKind: String {
     case `break`
     case `continue`
     case `return`
+    case yield
     case `if`
     case `else`
     case `switch`
@@ -117,14 +118,14 @@ public struct Token {
         return PrefixOperator(rawValue: kind.rawValue)
     }
 
-    /// Whether or not the token is a binding operator.
-    public var isBindingOperator: Bool {
-        return asBindingOperator != nil
+    /// Whether or not the token is an postfix operator.
+    public var isPostfixOperator: Bool {
+        return asPostfixOperator != nil
     }
 
-    /// The token as a binding operator.
-    public var asBindingOperator: BindingOperator? {
-        return BindingOperator(rawValue: kind.rawValue)
+    /// The token as a postfix operator.
+    public var asPostfixOperator: PostfixOperator? {
+        return PostfixOperator(rawValue: kind.rawValue)
     }
 
     /// Whether or not the token is an infix operator.
@@ -135,6 +136,16 @@ public struct Token {
     /// The token as an infix operator.
     public var asInfixOperator: InfixOperator? {
         return InfixOperator(rawValue: kind.rawValue)
+    }
+
+    /// Whether or not the token is a binding operator.
+    public var isBindingOperator: Bool {
+        return asBindingOperator != nil
+    }
+
+    /// The token as a binding operator.
+    public var asBindingOperator: BindingOperator? {
+        return BindingOperator(rawValue: kind.rawValue)
     }
 
     /// The kind of the token.
