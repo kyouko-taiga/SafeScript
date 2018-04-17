@@ -253,6 +253,14 @@ extension TernaryExpr {
 
 }
 
+extension DotExpr {
+
+    public var prettyDescription: String {
+        return "\(owner.prettyDescription).\(attribute)"
+    }
+
+}
+
 extension CallExpr {
 
     public var prettyDescription: String {

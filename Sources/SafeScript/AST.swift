@@ -471,6 +471,24 @@ public class TernaryExpr: Node {
 
 }
 
+/// A dot expression.
+public class DotExpr: Node {
+
+    public init(owner: Node, attribute: String, range: SourceRange) {
+        self.owner = owner
+        self.attribute = attribute
+        self.range = range
+    }
+
+    /// The owner.
+    public var owner: Node
+    /// The attribute expression.
+    public var attribute: String
+    /// The range in the source file of the concrete syntax this node represents.
+    public var range: SourceRange
+
+}
+
 /// A call expression.
 public class CallExpr: Node {
 
