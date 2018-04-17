@@ -366,7 +366,7 @@ public class Break: Node {
 /// A return statement.
 public class Return: Node {
 
-    public init(value: Node?, range: SourceRange) {
+    public init(value: Node? = nil, range: SourceRange) {
         self.value = value
         self.range = range
     }
@@ -381,7 +381,7 @@ public class Return: Node {
 /// A yield statement.
 public class Yield: Node {
 
-    public init(value: Node?, range: SourceRange) {
+    public init(value: Node? = nil, range: SourceRange) {
         self.value = value
         self.range = range
     }
