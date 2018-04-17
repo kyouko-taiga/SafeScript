@@ -246,9 +246,27 @@ extension InfixExpr {
 extension TernaryExpr {
 
     public var prettyDescription: String {
-        return "\(condition.prettyDescription)\n " +
-               "  ? \(thenValue.prettyDescription)\n" +
-               "  : \(elseValue.prettyDescription)"
+        let thenLines = thenValue.prettyDescription.split(separator: "\n")
+        var thenDescription = thenLines.first!
+        if thenLines.count > 1 {
+            thenDescription += "\n" + thenLines
+                .dropFirst()
+                .map({ "  \($0)" })
+                .joined(separator: "\n")
+        }
+
+        let elseLines = elseValue.prettyDescription.split(separator: "\n")
+        var elseDescription = elseLines.first!
+        if elseLines.count > 1 {
+            elseDescription += "\n" + elseLines
+                .dropFirst()
+                .map({ "  \($0)" })
+                .joined(separator: "\n")
+        }
+
+        return "\(condition.prettyDescription)\n" +
+            "  ? \(thenDescription)\n" +
+            "  : \(elseDescription)"
     }
 
 }
