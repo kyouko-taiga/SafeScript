@@ -591,13 +591,13 @@ public class ArrayLiteral: Node {
 /// A object literal.
 public class ObjectLiteral: Node {
 
-    public init(elements: [String: Node], range: SourceRange) {
+    public init(elements: [(Node, Node)], range: SourceRange) {
         self.elements = elements
         self.range = range
     }
 
     /// The elements of the literal.
-    public var elements: [String: Node]
+    public var elements: [(Node, Node)]
     /// The range in the source file of the concrete syntax this node represents.
     public var range: SourceRange
 

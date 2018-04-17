@@ -316,7 +316,12 @@ extension ArrayLiteral {
 extension ObjectLiteral {
 
     public var prettyDescription: String {
-        let entries = elements.map({ "\($0.key): \($0.value.prettyDescription)" })
+        let entries = elements.map({ (arg) -> String in
+            let (key, value) = arg
+            return key is ScalarLiteral
+                ? "\(key.prettyDescription): \(value.prettyDescription)"
+                : "[ \(key.prettyDescription) ]: \(value.prettyDescription)"
+        })
         return "{ " + entries.joined(separator: ", ") + " }"
     }
 
