@@ -1,3 +1,5 @@
+import AST
+
 /// Enumerates the kinds of tokens.
 public enum TokenKind: String {
 
@@ -172,4 +174,3 @@ extension Token: CustomStringConvertible {
     }
 
 }
-

@@ -1,3 +1,5 @@
+import AST
+
 extension Parser {
 
     /// Attempts to run the given parsing function but backtracks if it failed.

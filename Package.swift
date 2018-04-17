@@ -5,15 +5,15 @@ import PackageDescription
 
 let package = Package(
     name: "SafeScript",
-    dependencies: [
-        // Dependencies declare other packages that this package depends on.
-        // .package(url: /* package url */, from: "1.0.0"),
+    products: [
+        .executable(name: "safescript", targets: ["safescript"]),
+        .library(name: "AST", type: .static, targets: ["AST"]),
+        .library(name: "Parser", type: .static, targets: ["Parser"]),
     ],
+    dependencies: [],
     targets: [
-        // Targets are the basic building blocks of a package. A target can define a module or a test suite.
-        // Targets can depend on other targets in this package, and on products in packages which this package depends on.
-        .target(
-            name: "SafeScript",
-            dependencies: []),
+        .target(name: "safescript", dependencies: ["Parser"]),
+        .target(name: "Parser", dependencies: ["AST"]),
+        .target(name: "AST"),
     ]
 )

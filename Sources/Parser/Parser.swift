@@ -1,3 +1,5 @@
+import AST
+
 public class Parser {
 
     // MARK: Public API

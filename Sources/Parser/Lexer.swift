@@ -1,4 +1,5 @@
 import Foundation
+import AST
 
 /// Lexer for the tokens of the Anzen language.
 public struct Lexer {
@@ -332,4 +333,3 @@ func isAlnumOrUnderscore(_ char: UnicodeScalar) -> Bool {
 
 /// Set of operator symbols.
 let operatorChars = Set<UnicodeScalar>(".,:!?(){}[]<>-*/%+-=&".unicodeScalars)
-

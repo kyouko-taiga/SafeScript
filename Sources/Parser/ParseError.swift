@@ -1,3 +1,5 @@
+import AST
+
 public enum SyntaxError: CustomStringConvertible {
 
     /// Occurs when the parser fails to parse an identifier.

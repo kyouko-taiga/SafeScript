@@ -1,3 +1,5 @@
+import AST
+
 extension Parser {
 
     func parseStatement() throws -> Node {

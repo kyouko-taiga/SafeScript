@@ -1,3 +1,5 @@
+import AST
+
 extension Parser {
 
     /// Parses an expression.

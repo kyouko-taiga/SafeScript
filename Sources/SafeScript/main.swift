@@ -1,5 +1,8 @@
+import Parser
+
 let source = """
-let x = 0
+let x: mutable = 0
+let y: mutable &- x
 """
 
 let lexer = Lexer(string: source)
