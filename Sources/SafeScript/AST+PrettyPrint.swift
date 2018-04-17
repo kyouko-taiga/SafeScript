@@ -283,7 +283,7 @@ extension CallExpr {
 
     public var prettyDescription: String {
         let args = arguments.map({ $0.prettyDescription }).joined(separator: ", ")
-        return "\(callee)(\(args))"
+        return "\(callee.prettyDescription)(\(args))"
     }
 
 }
@@ -291,8 +291,7 @@ extension CallExpr {
 extension SubscriptExpr {
 
     public var prettyDescription: String {
-        let args = arguments.map({ $0.prettyDescription }).joined(separator: ", ")
-        return "\(callee)(\(args))"
+        return "\(callee.prettyDescription)[\(index.prettyDescription)]"
     }
 
 }
@@ -318,7 +317,11 @@ extension Identifier {
 extension ScalarLiteral {
 
     public var prettyDescription: String {
-        return "\(value)"
+        if let string = value as? String {
+            return "'\(string)'"
+        } else {
+            return "\(value)"
+        }
     }
 
 }
