@@ -12,8 +12,9 @@ let package = Package(
     ],
     dependencies: [],
     targets: [
-        .target(name: "safescript", dependencies: ["Parser"]),
+        .target(name: "safescript", dependencies: ["Parser", "Sema"]),
         .target(name: "Parser", dependencies: ["AST"]),
+        .target(name: "Sema", dependencies: ["AST"]),
         .target(name: "AST"),
     ]
 )
