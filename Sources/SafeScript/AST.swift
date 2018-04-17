@@ -432,7 +432,7 @@ public class PostfixExpr: Node {
 /// An infixed expression.
 public class InfixExpr: Node {
 
-    public init(left: Node, op: PostfixOperator, right: Node, range: SourceRange) {
+    public init(left: Node, op: InfixOperator, right: Node, range: SourceRange) {
         self.left = left
         self.op = op
         self.right = right
@@ -442,7 +442,7 @@ public class InfixExpr: Node {
     /// The left operand of the expression.
     public var left: Node
     /// The operator of the expression.
-    public var op: PostfixOperator
+    public var op: InfixOperator
     /// The right operand of the expression.
     public var right: Node
     /// The range in the source file of the concrete syntax this node represents.
