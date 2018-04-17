@@ -184,6 +184,7 @@ extension Lexer: IteratorProtocol, Sequence {
             case "break"      : kind = .break // swiftlint:disable:this unneeded_break_in_switch
             case "continue"   : kind = .continue
             case "return"     : kind = .return
+            case "yield"      : kind = .yield
             case "if"         : kind = .if
             case "else"       : kind = .else
             case "switch"     : kind = .switch
