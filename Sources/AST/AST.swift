@@ -507,6 +507,25 @@ public class CallExpr: Node {
 
 }
 
+/// A call argument.
+public class Argument: Node {
+
+    public init(byReference: Bool, value: Node, range: SourceRange) {
+        self.byReference = byReference
+        self.value = value
+        self.range = range
+    }
+
+    /// Whether or not the argument is passed by reference.
+    public var byReference: Bool
+    /// The value of the argument.
+    public var value: Node
+    /// The range in the source file of the concrete syntax this node represents.
+    public var range: SourceRange
+
+}
+
+
 /// A subscript expression.
 public class SubscriptExpr: Node {
 
@@ -520,24 +539,6 @@ public class SubscriptExpr: Node {
     public var callee: Node
     /// The index of the subscript.
     public var index: Node
-    /// The range in the source file of the concrete syntax this node represents.
-    public var range: SourceRange
-
-}
-
-/// A call or subscript argument.
-public class Argument: Node {
-
-    public init(byReference: Bool, value: Node, range: SourceRange) {
-        self.byReference = byReference
-        self.value = value
-        self.range = range
-    }
-
-    /// Whether or not the argument is passed by reference.
-    public var byReference: Bool
-    /// The value of the argument.
-    public var value: Node
     /// The range in the source file of the concrete syntax this node represents.
     public var range: SourceRange
 

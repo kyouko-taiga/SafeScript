@@ -23,8 +23,8 @@ public protocol ASTVisitor {
     mutating func visit(_ node: TernaryExpr)     throws
     mutating func visit(_ node: DotExpr)         throws
     mutating func visit(_ node: CallExpr)        throws
-    mutating func visit(_ node: SubscriptExpr)   throws
     mutating func visit(_ node: Argument)        throws
+    mutating func visit(_ node: SubscriptExpr)   throws
     mutating func visit(_ node: Identifier)      throws
     mutating func visit(_ node: ScalarLiteral)   throws
     mutating func visit(_ node: ArrayLiteral)    throws
