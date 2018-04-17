@@ -19,10 +19,6 @@ public enum PrefixOperator: String, CustomStringConvertible {
 /// Enumeration of the infix operators.
 public enum InfixOperator: String, CustomStringConvertible {
 
-    // MARK: Member attribute precedence
-
-    case dot        = "."
-
     // MARK: Exponent precedence
 
     case pow        = "**"
