@@ -78,6 +78,15 @@ public extension ASTVisitor {
         try visit(node.body)
     }
 
+    mutating func visit(_ node: ArrowFun) throws {
+        try traverse(node)
+    }
+
+    mutating func traverse(_ node: ArrowFun) throws {
+        try visit(node.parameters)
+        try visit(node.body)
+    }
+
     mutating func visit(_ node: ParamDecl) throws {
         try traverse(node)
     }
@@ -159,6 +168,26 @@ public extension ASTVisitor {
     mutating func visit(_ node: Break) throws {
     }
 
+    mutating func visit(_ node: Return) throws {
+        try traverse(node)
+    }
+
+    mutating func traverse(_ node: Return) throws {
+        if let value = node.value {
+            try visit(value)
+        }
+    }
+
+    mutating func visit(_ node: Yield) throws {
+        try traverse(node)
+    }
+
+    mutating func traverse(_ node: Yield) throws {
+        if let value = node.value {
+            try visit(value)
+        }
+    }
+
     mutating func visit(_ node: PrefixExpr) throws {
         try traverse(node)
     }
@@ -209,6 +238,14 @@ public extension ASTVisitor {
     mutating func traverse(_ node: CallExpr) throws {
         try visit(node.callee)
         try visit(node.arguments)
+    }
+
+    mutating func visit(_ node: Argument) throws {
+        try traverse(node)
+    }
+
+    mutating func traverse(_ node: Argument) throws {
+        try visit(node.value)
     }
 
     mutating func visit(_ node: SubscriptExpr) throws {
