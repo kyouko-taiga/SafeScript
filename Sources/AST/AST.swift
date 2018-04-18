@@ -1,5 +1,5 @@
 /// Common interface for all AST nodes.
-public protocol Node: PrettyPrintable {
+public protocol Node: class, PrettyPrintable {
 
     /// The range in the source file of the concrete syntax this node represents.
     var range: SourceRange { get set }
