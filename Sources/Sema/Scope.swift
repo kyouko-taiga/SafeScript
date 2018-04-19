@@ -1,27 +1,3 @@
-/// A named symbol.
-public class Symbol {
-
-    public init(name: String) {
-        self.name = name
-    }
-
-    public let name: String
-    public weak var scope: Scope?
-
-}
-
-extension Symbol: Hashable {
-
-    public var hashValue: Int {
-        return self.name.hashValue ^ (self.scope?.id ?? 0)
-    }
-
-    public static func == (lhs: Symbol, rhs: Symbol) -> Bool {
-        return lhs === rhs
-    }
-
-}
-
 /// A mapping from names to symbols.
 ///
 /// This collection stores the symbols that are declared within a scope (e.g. a function scope).
