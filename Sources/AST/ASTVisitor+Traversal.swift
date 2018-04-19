@@ -11,6 +11,7 @@ public extension ASTVisitor {
         case let n as ParamDecl:       try visit(n)
         case let n as ClassDecl:       try visit(n)
         case let n as If:              try visit(n)
+        case let n as Assignment:      try visit(n)
         case let n as Switch:          try visit(n)
         case let n as WhileLoop:       try visit(n)
         case let n as ForLoop:         try visit(n)
