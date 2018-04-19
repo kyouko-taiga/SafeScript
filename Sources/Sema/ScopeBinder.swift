@@ -79,8 +79,10 @@ public struct ScopeBinder: ASTVisitor, Pass {
                 return
             }
             context[node, "scope"] = parentScope
+            context[node, "symbol"] = parentScope.symbols[node.name]
         } else {
             context[node, "scope"] = scope
+            context[node, "symbol"] = scope.symbols[node.name]
         }
     }
 
