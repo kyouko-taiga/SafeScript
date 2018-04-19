@@ -17,7 +17,7 @@ public class Context {
         set {
             if let index = mapping.index(where: { $0.node === node }) {
                 var newData = mapping[index].data
-                newData[key] = newValue!
+                newData[key] = newValue
                 mapping[index] = (node: node, data: newData)
             } else if newValue != nil {
                 mapping.append((node: node, data: [key: newValue!]))
