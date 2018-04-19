@@ -24,6 +24,7 @@ public struct BorrowChecker: ASTVisitor, Pass {
         try self.visit(node.statements)
 
         // Clean the borrows that go out of scope.
+        let all: Set<Permission> = [.readOnly, .readWrite]
         for (_, symbol) in (context[node, "innerScope"] as! Scope).symbols {
             // Remove the reference from the typing context.
             defer {
