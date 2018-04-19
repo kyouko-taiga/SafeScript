@@ -4,6 +4,9 @@ extension Parser {
 
     func parseStatement() throws -> Node {
         switch peek().kind {
+        case .leftBrace:
+            return try parseStatementBlock()
+
         case .continue:
             let token = consume()
             return Continue(range: token!.range)
