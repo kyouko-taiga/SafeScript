@@ -20,6 +20,14 @@ public struct SourceLocation: Comparable {
 
 }
 
+extension SourceLocation: CustomStringConvertible {
+
+    public var description: String {
+        return "\(line):\(column)"
+    }
+
+}
+
 public struct SourceRange: Equatable {
 
     public init(from start: SourceLocation, to end: SourceLocation) {
