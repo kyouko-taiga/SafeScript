@@ -18,9 +18,9 @@ public struct ScopeBinder: ASTVisitor, Pass {
     }
 
     public mutating func visit(_ node: Block) throws {
-        // NOTE: We choose to make all module scopes descend from Anzen's built-in scope. This
-        // way, built-in symbols (e.g. `Math`) can be refered "as-is" within source code, yet we
-        // don't loose the ability to shadow them.
+        // NOTE: We choose to make all module scopes descend from SafeScript's built-in scope. As
+        // a result, built-in symbols (e.g. `Math`) can be refered "as-is" within source code, yet
+        // we don't loose the ability to shadow them.
         let innerScope: Scope = context[node, "innerScope"]!
         innerScope.parent = self.scopes.top
 
