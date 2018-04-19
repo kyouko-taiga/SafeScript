@@ -26,25 +26,25 @@ public struct SymbolsExtractor: ASTVisitor, Pass {
 
     public mutating func visit(_ node: Block) throws {
         // Create a new scope for the block.
-        let innerScope = Scope(parent: stack.top)
+        let innerScope = Scope(parent: scopes.top)
         context[node, "innerScope"] = innerScope
 
         // Visit the block's statements.
-        self.stack.push(innerScope)
+        self.scopes.push(innerScope)
         try self.visit(node.statements)
-        self.stack.pop()
+        self.scopes.pop()
     }
 
     public mutating func visit(_ node: VarDecl) throws {
         // Make sure the property's name wasn't already declared.
-        if self.stack.top!.defines(name: node.name) {
+        if self.scopes.top!.defines(name: node.name) {
             self.errors.append(DuplicateDeclaration(name: node.name, at: node.range))
         }
 
         // Create a new symbol for the property, and visit the node's declaration.
         let symbol = Symbol(name: node.name)
-        self.stack.top!.add(symbol: symbol)
-        context[node, "scope"] = self.stack.top
+        self.scopes.top!.add(symbol: symbol)
+        context[node, "scope"] = self.scopes.top
         context[node, "symbol"] = symbol
         try self.traverse(node)
     }
@@ -52,20 +52,20 @@ public struct SymbolsExtractor: ASTVisitor, Pass {
 
     public mutating func visit(_ node: FunDecl) throws {
         // Make sure the function's name wasn't already declared.
-        if stack.top!.defines(name: node.name) {
+        if scopes.top!.defines(name: node.name) {
             self.errors.append(DuplicateDeclaration(name: node.name, at: node.range))
         }
 
         // Create a symbol for the function's name within the currently visited scope.
         let symbol = Symbol(name: node.name)
-        self.stack.top!.add(symbol: symbol)
-        context[node, "scope"] = self.stack.top
+        self.scopes.top!.add(symbol: symbol)
+        context[node, "scope"] = self.scopes.top
         context[node, "symbol"] = symbol
 
         // Create a new scope for the function's parameters.
-        let functionScope = Scope(name: node.name, parent: self.stack.top)
+        let functionScope = Scope(name: node.name, parent: self.scopes.top)
         context[node, "innerScope"] = functionScope
-        self.stack.push(functionScope)
+        self.scopes.push(functionScope)
 
         // Note that parameters aren't bound to the same scope as that of the function's body,
         // so that they may be shadowed:
@@ -76,44 +76,44 @@ public struct SymbolsExtractor: ASTVisitor, Pass {
 
         // Visit the function's body.
         try self.visit(node.body)
-        self.stack.pop()
+        self.scopes.pop()
     }
 
     public mutating func visit(_ node: ParamDecl) throws {
         // Make sure the parameter's name wasn't already declared.
-        if self.stack.top!.defines(name: node.name) {
+        if self.scopes.top!.defines(name: node.name) {
             self.errors.append(DuplicateDeclaration(name: node.name, at: node.range))
         }
 
         // Create a new symbol for the parameter, and visit the node's declaration.
         let symbol = Symbol(name: node.name)
-        self.stack.top!.add(symbol: symbol)
-        context[node, "scope"] = self.stack.top
+        self.scopes.top!.add(symbol: symbol)
+        context[node, "scope"] = self.scopes.top
         context[node, "symbol"] = symbol
         try self.traverse(node)
     }
 
     public mutating func visit(_ node: ClassDecl) throws {
         // Make sure the class name wasn't already declared.
-        if self.stack.top!.defines(name: node.name) {
+        if self.scopes.top!.defines(name: node.name) {
             self.errors.append(DuplicateDeclaration(name: node.name, at: node.range))
         }
 
         // Create a new symbol for the class.
         let symbol = Symbol(name: node.name)
-        self.stack.top!.add(symbol: symbol)
-        context[node, "scope"] = self.stack.top
+        self.scopes.top!.add(symbol: symbol)
+        context[node, "scope"] = self.scopes.top
         context[node, "symbol"] = symbol
 
         // Visit the class body.
         try self.traverse(node)
-        self.stack.pop()
+        self.scopes.pop()
     }
 
     // MARK: Internals
 
     private var context: Context!
-    private var stack: Stack<Scope> = []
+    private var scopes: Stack<Scope> = []
     private var errors: [Error] = []
 
 }
