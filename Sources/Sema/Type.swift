@@ -13,3 +13,9 @@ public struct GroundType: SafeScriptType {
     public static let string    = GroundType(name: "string")
 
 }
+
+extension GroundType: CustomStringConvertible {
+
+    public var description: String { return name }
+
+}
