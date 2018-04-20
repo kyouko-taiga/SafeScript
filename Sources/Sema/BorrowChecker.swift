@@ -4,7 +4,7 @@ import Utils
 /// Borrow checker.
 public struct BorrowChecker: ASTVisitor, Pass {
 
-    public let name: String = "symbol extraction"
+    public let name: String = "borrow checking"
 
     public init() {}
 
