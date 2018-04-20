@@ -28,7 +28,6 @@ public struct BorrowChecker: ASTVisitor, Pass {
         for (_, symbol) in (context[node, "innerScope"] as! Scope).symbols {
             // Remove the reference from the typing context.
             defer {
-                types.removeValue(forKey: symbol)
                 memory.removeValue(forKey: symbol)
                 permissions.removeValue(forKey: symbol)
             }
@@ -171,31 +170,31 @@ public struct BorrowChecker: ASTVisitor, Pass {
 
     // MARK: Expression typing
 
-    private mutating func type(of node: Node) -> SafeScriptType {
-        switch node {
-        case let n as Identifier   : return type(of: n)
-        case let n as ScalarLiteral: return type(of: n)
-        default:
-            errors.append(UnexpectedNode(node: node))
-            return GroundType.undefined
-        }
-    }
-
-    private mutating func type(of node: Identifier) -> SafeScriptType {
-        let symbol: Symbol = context[node, "symbol"]!
-        return types[symbol] ?? GroundType.undefined
-    }
-
-    private mutating func type(of node: ScalarLiteral) -> SafeScriptType {
-        switch node.value {
-        case is Int, is Double:
-            return GroundType.number
-        case is String:
-            return GroundType.string
-        default:
-            return GroundType.undefined
-        }
-    }
+//    private mutating func type(of node: Node) -> SafeScriptType {
+//        switch node {
+//        case let n as Identifier   : return type(of: n)
+//        case let n as ScalarLiteral: return type(of: n)
+//        default:
+//            errors.append(UnexpectedNode(node: node))
+//            return GroundType.undefined
+//        }
+//    }
+//
+//    private mutating func type(of node: Identifier) -> SafeScriptType {
+//        let symbol: Symbol = context[node, "symbol"]!
+//        return types[symbol] ?? GroundType.undefined
+//    }
+//
+//    private mutating func type(of node: ScalarLiteral) -> SafeScriptType {
+//        switch node.value {
+//        case is Int, is Double:
+//            return GroundType.number
+//        case is String:
+//            return GroundType.string
+//        default:
+//            return GroundType.undefined
+//        }
+//    }
 
     /// Returns the effective permissions of the given symbol.
     private func effectivePermissions(of symbol: Symbol) -> Set<Permission> {
@@ -208,8 +207,6 @@ public struct BorrowChecker: ASTVisitor, Pass {
 
     // MARK: Internals
 
-    /// A mapping that associates variables to types.
-    private var types      : [Symbol: SafeScriptType] = [:]
     /// A mapping that associates expressions to abstract memory locations.
     private var memory     : [Symbol: MemoryLocation] = [:]
     /// A mapping that associates expressions and abstract memory locations to permissions.

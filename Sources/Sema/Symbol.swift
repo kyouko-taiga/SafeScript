@@ -5,6 +5,12 @@ public class Symbol {
         self.name = name
     }
 
+    /// The type of the symbol.
+    ///
+    /// Note that due to the dynamic nature of safescript, the type of a symbol may change during
+    /// the different passes of the semantic analysis.
+    public var type: SafeScriptType?
+
     public let name: String
     public weak var scope: Scope?
 
