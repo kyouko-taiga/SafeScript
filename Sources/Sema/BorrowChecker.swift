@@ -21,7 +21,7 @@ public struct BorrowChecker: ASTVisitor, Pass {
     // MARK: Statement processing
 
     public mutating func visit(_ node: Block) throws {
-        try self.visit(node.statements)
+        try visit(node.statements)
 
         // Clean the borrows that go out of scope.
         let all: Set<Permission> = [.readOnly, .readWrite]
@@ -137,7 +137,7 @@ public struct BorrowChecker: ASTVisitor, Pass {
     /// Processes a function call expression.
     public mutating func visit(_ node: CallExpr) throws {
         // Get the type of the callee.
-        try self.visit(node.callee)
+        try visit(node.callee)
         guard let symbol: Symbol = context[node.callee, "symbol"] else {
             errors.append(TypeError(reason: "cannot find the type of \(node.callee)", at: node.range))
             return
@@ -168,7 +168,7 @@ public struct BorrowChecker: ASTVisitor, Pass {
         }
 
         for (argument, symbol) in zip(node.arguments, symbols) {
-            try self.visit(argument.value)
+            try visit(argument.value)
             guard argument.byReference
                 else { continue }
 
@@ -316,7 +316,7 @@ public struct BorrowChecker: ASTVisitor, Pass {
     // MARK: Internals
 
     /// A mapping that associates expressions to abstract memory locations.
-    private var memory     : [Symbol: MemoryLocation] = [:]
+    private var memory: [Symbol: MemoryLocation] = [:]
     /// A mapping that associates expressions and abstract memory locations to permissions.
     private var permissions: ReferenceMap<AnyObject, Set<Permission>> = [:]
 
