@@ -53,30 +53,32 @@ public struct SymbolsExtractor: ASTVisitor, Pass {
     public mutating func visit(_ node: FunDecl) throws {
         // Make sure the function's name wasn't already declared.
         if scopes.top!.defines(name: node.name) {
-            self.errors.append(DuplicateDeclaration(name: node.name, at: node.range))
+            errors.append(DuplicateDeclaration(name: node.name, at: node.range))
         }
 
         // Create a symbol for the function's name within the currently visited scope.
         let symbol = Symbol(name: node.name)
-        self.scopes.top!.add(symbol: symbol)
+        scopes.top!.add(symbol: symbol)
         context[node, "scope"] = self.scopes.top
         context[node, "symbol"] = symbol
 
         // Create a new scope for the function's parameters.
-        let functionScope = Scope(name: node.name, parent: self.scopes.top)
-        context[node, "innerScope"] = functionScope
-        self.scopes.push(functionScope)
+        let innerScope = Scope(name: node.name, parent: self.scopes.top)
+        scopes.push(innerScope)
+        context[node, "innerScope"] = innerScope
 
-        // Note that parameters aren't bound to the same scope as that of the function's body,
-        // so that they may be shadowed:
-        //
-        //     function f(x: Int) { let x = x }
-        //
+        // Add the function's parameters to its inner scope.
         try self.visit(node.parameters)
 
         // Visit the function's body.
-        try self.visit(node.body)
-        self.scopes.pop()
+        // Note that we visit the statements directly, so as to avoid creating an additional
+        // scope. That's because JavaScript's function parameters are declared in the same scope
+        // as that of the function body.
+        context[node.body, "innerScope"] = innerScope
+        for statement in node.body.statements {
+            try self.visit(statement)
+        }
+        scopes.pop()
     }
 
     public mutating func visit(_ node: ParamDecl) throws {
