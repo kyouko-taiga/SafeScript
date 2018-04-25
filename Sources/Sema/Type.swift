@@ -36,7 +36,7 @@ extension FunctionType: CustomStringConvertible {
 
     public var description: String {
         let t = domain.map({ $0.rawValue }).joined(separator: ", ")
-        return "f(\(t)"
+        return "f(\(t))"
     }
 
 }
