@@ -196,14 +196,13 @@ extension Parser {
         while peek().kind != .rightBrace {
             statements.append(try parseStatement())
 
-            // Skip leading new lines.
-            consumeNewlines()
-
             // If the next token isn't the block delimiter, we MUST parse a statement delimiter.
             if peek().kind != .rightBrace {
                 guard peek().isStatementDelimiter
                     else { throw parseFailure(.expectedStatementDelimiter) }
-                consume()
+
+                // Skip leading new lines before next statement.
+                consumeNewlines()
             }
         }
 
