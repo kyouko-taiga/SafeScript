@@ -91,15 +91,8 @@ public struct ScopeBinder: ASTVisitor, Pass {
     /// Keeps track of what identifier is being declared while visiting its declaration.
     ///
     /// This mapping will help us keep track of what the identifier being declared when visiting
-    /// its declaration, which is necessary to properly map the scopes of declaration expressions
-    /// that refer to the same name as the identifier under declaration, but from an enclosing
-    /// scope. For instance, consider the following snippet in which `x` declared within the
-    /// function `f` should be a new variable, but inialized with the value of the constant `x`
-    /// defined in the global scope:
-    ///
-    ///     let x = 0
-    ///     function f() { let x = x }
-    ///
+    /// its declaration, which is necessary to properly flagging declaration that refer to the
+    /// same name as the identifier under declaration (e.g. `let x = x`).
     private var underDeclaration: [Scope: String] = [:]
 
     private var errors: [Error] = []
