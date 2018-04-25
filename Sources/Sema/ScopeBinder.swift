@@ -8,6 +8,11 @@ public struct ScopeBinder: ASTVisitor, Pass {
     public init() {}
 
     public mutating func run(on module: Node, in context: Context) -> [Error] {
+        // Create a scope with built-in symbols.
+        let builtins = Scope(name: "builtins")
+        builtins.add(symbol: Symbol(name: "console", type: FunctionType(domain: [.const])))
+        self.scopes.push(builtins)
+
         self.context = context
         do {
             try visit(module)

@@ -1,8 +1,9 @@
 /// A named symbol.
 public class Symbol {
 
-    public init(name: String) {
+    public init(name: String, type: SafeScriptType? = nil) {
         self.name = name
+        self.type = type
     }
 
     /// The type of the symbol.
