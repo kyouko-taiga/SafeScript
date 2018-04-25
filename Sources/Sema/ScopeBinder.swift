@@ -56,13 +56,21 @@ public struct ScopeBinder: ASTVisitor, Pass {
         self.scopes.pop()
     }
 
-//    public mutating func visit(_ node: SelectExpr) throws {
-//        // NOTE: Unfortunately, we can't bind the symbols of a select expression's ownee, because
-//        // it depends on the kind of declaration the owner's is refencing.
-//        if let owner = node.owner {
-//            try self.visit(owner)
-//        }
-//    }
+    public mutating func visit(_ node: DotExpr) throws {
+        // Find the scope that defines the owner of the visited expression.
+        try self.visit(node.owner)
+        let symbol: Symbol = context[node.owner, "symbol"]!
+
+        // Look for a symbol of the same name in the owner's members, or create a new one.
+        context[node, "scope"] = symbol.scope
+        if let child = symbol.children.first(where: { $0.name == node.attribute }) {
+            context[node, "symbol"] = child
+        } else {
+            let child = Symbol(name: node.attribute)
+            symbol.scope?.add(symbol: child)
+            context[node, "symbol"] = child
+        }
+    }
 
     public mutating func visit(_ node: Identifier) throws {
         // Find the scope that defines the visited identifier.
