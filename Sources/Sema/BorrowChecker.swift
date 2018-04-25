@@ -72,6 +72,43 @@ public struct BorrowChecker: ASTVisitor, Pass {
         }
     }
 
+    /// Processes a function declaration.
+    public mutating func visit(_ node: FunDecl) throws {
+        try traverse(node)
+    }
+
+    /// Processes a function parameter declaration.
+    public mutating func visit(_ node: ParamDecl) throws {
+        // Retrieve the symbol associated with the parameter.
+        let symbol: Symbol = context[node, "symbol"]!
+
+        // Determine which permissions should be associated with the parameter.
+        // Π[x -> { ro }] | Π[x -> { ro, rw }]
+        permissions[symbol] = node.mutability == .mutable
+            ? [.readWrite]
+            : [.readOnly]
+
+        // Handle default values.
+        if let (op, value) = node.defaultValue {
+            do {
+                try visit(value)
+                if op == .copy {
+                    try makeCopyBinding(to: symbol, at: node.range)
+                } else {
+                    let p: Permission = node.mutability == .mutable
+                        ? .readWrite
+                        : .readOnly
+                    try makeRefBinding(to: symbol, on: value, borrowing: p, at: node.range)
+                }
+            } catch {
+                errors.append(error)
+                return
+            }
+        } else {
+            memory[symbol] = MemoryLocation()
+        }
+    }
+
     /// Processes a binding statement.
     public mutating func visit(_ node: Assignment) throws {
         // The l-value must be a referenceable expression.
@@ -91,6 +128,72 @@ public struct BorrowChecker: ASTVisitor, Pass {
         } catch {
             errors.append(error)
             return
+        }
+    }
+
+    /// Processes a function call expression.
+    public mutating func visit(_ node: CallExpr) throws {
+        // Get the type of the callee.
+        try self.visit(node.callee)
+        guard let symbol: Symbol = context[node.callee, "symbol"] else {
+            errors.append(TypeError(reason: "cannot find the type of \(node.callee)", at: node.range))
+            return
+        }
+        guard let ty = symbol.type as? FunctionType else {
+            let ty = symbol.type ?? GroundType.undefined
+            errors.append(TypeError(reason: "\(ty) is not a function type", at: node.range))
+            return
+        }
+
+        // Make sure the number of parameters agree.
+        // FIXME: Handle default parameters.
+        guard ty.domain.count == node.arguments.count else {
+            errors.append(TypeError(
+                reason: "invalid number of parameters, " +
+                        "expected \(ty.domain.count), got \(node.arguments.count)",
+                at: node.range))
+            return
+        }
+
+        // Process the node's callee.
+        let symbols = ty.domain.map { q -> Symbol in
+            let symbol = Symbol(name: "?")
+            permissions[symbol] = q == .mutable
+                ? [ .readWrite ]
+                : [ .readOnly ]
+            return symbol
+        }
+
+        for (argument, symbol) in zip(node.arguments, symbols) {
+            try self.visit(argument.value)
+            guard argument.byReference
+                else { continue }
+
+            do {
+                let p = permissions[symbol]!.first!
+                try makeRefBinding(to: symbol, on: argument.value, borrowing: p,at: argument.range)
+            } catch {
+                errors.append(error)
+                return
+            }
+        }
+
+        // Release all symbols.
+        let all: Set<Permission> = [.readOnly, .readWrite]
+        for symbol in symbols {
+            // Remove the reference from the typing context.
+            defer {
+                memory.removeValue(forKey: symbol)
+                permissions.removeValue(forKey: symbol)
+            }
+
+            // Restore the permission on the location, assuming the reference was bound.
+            guard let location = memory[symbol]
+                else { continue }
+            let refs = references(to: location).subtracting([symbol])
+            permissions[location] = refs.reduce(all) {
+                result, p in result.intersection(permissions[p]!)
+            }
         }
     }
 
