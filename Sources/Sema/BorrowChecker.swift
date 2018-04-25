@@ -57,6 +57,7 @@ public struct BorrowChecker: ASTVisitor, Pass {
         if let (op, value) = node.initialBinding {
             do {
                 try visit(value)
+                symbol.type = (context[value, "symbol"] as? Symbol)?.type
                 if op == .copy {
                     try makeCopyBinding(to: symbol, at: node.range)
                 } else {
@@ -92,6 +93,7 @@ public struct BorrowChecker: ASTVisitor, Pass {
         if let (op, value) = node.defaultValue {
             do {
                 try visit(value)
+                symbol.type = (context[value, "symbol"] as? Symbol)?.type
                 if op == .copy {
                     try makeCopyBinding(to: symbol, at: node.range)
                 } else {
@@ -117,6 +119,7 @@ public struct BorrowChecker: ASTVisitor, Pass {
 
         do {
             try visit(node.rvalue)
+            destination.type = (context[node.rvalue, "symbol"] as? Symbol)?.type
             if node.op == .copy {
                 try makeCopyBinding(to: destination, at: node.range)
             } else {
