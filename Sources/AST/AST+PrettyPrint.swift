@@ -108,7 +108,7 @@ extension ParamDecl {
 extension ClassDecl {
 
     public var prettyDescription: String {
-        var result = "struct \(name) {\n"
+        var result = "class \(name) {\n"
         for member in members {
             result += member.prettyDescription
                 .split(separator: "\n")
