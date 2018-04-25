@@ -72,18 +72,14 @@ public struct ScopeBinder: ASTVisitor, Pass {
         }
 
         // If we're visiting the initial value of the identifier's declaration (e.g. as part of a
-        // property declaration), we should bind it to an enclosing scope.
-        if self.underDeclaration[scope] == node.name {
-            guard let parentScope = scope.parent?.findScopeDefining(name: node.name) else {
-                self.errors.append(UndefinedSymbol(name: node.name, at: node.range))
-                return
-            }
-            context[node, "scope"] = parentScope
-            context[node, "symbol"] = parentScope.symbols[node.name]
-        } else {
-            context[node, "scope"] = scope
-            context[node, "symbol"] = scope.symbols[node.name]
+        // property declaration), we should raise an undefined symbol error.
+        guard self.underDeclaration[scope] != node.name else {
+            self.errors.append(UndefinedSymbol(name: node.name, at: node.range))
+            return
         }
+
+        context[node, "scope"] = scope
+        context[node, "symbol"] = scope.symbols[node.name]
     }
 
     /// The AST context.
