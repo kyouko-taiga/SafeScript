@@ -119,3 +119,22 @@ public struct BorrowError: SemanticError, CustomStringConvertible {
     }
 
 }
+
+public struct TypeError: SemanticError, CustomStringConvertible {
+
+    public init(reason: String, at range: SourceRange? = nil) {
+        self.reason = reason
+        self.range = range
+    }
+
+    public let reason: String
+    public let range: SourceRange?
+
+    public var description: String {
+        let location = self.range != nil
+            ? "\(self.range!.start)"
+            : "?:?"
+        return "\(location): \(reason)"
+    }
+
+}

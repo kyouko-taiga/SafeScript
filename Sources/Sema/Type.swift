@@ -1,3 +1,5 @@
+import AST
+
 public protocol SafeScriptType { }
 
 public struct GroundType: SafeScriptType {
@@ -17,5 +19,24 @@ public struct GroundType: SafeScriptType {
 extension GroundType: CustomStringConvertible {
 
     public var description: String { return name }
+
+}
+
+public class FunctionType: SafeScriptType {
+
+    init(domain: [MutabilityQualifer]) {
+        self.domain = domain
+    }
+
+    let domain: [MutabilityQualifer]
+
+}
+
+extension FunctionType: CustomStringConvertible {
+
+    public var description: String {
+        let t = domain.map({ $0.rawValue }).joined(separator: ", ")
+        return "f(\(t)"
+    }
 
 }
