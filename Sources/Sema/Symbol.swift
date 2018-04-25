@@ -11,12 +11,6 @@ public class Symbol {
     /// the different passes of the semantic analysis.
     public var type: SafeScriptType?
 
-    /// The members of the symbol.
-    ///
-    /// Those are the symbols that "belong" to this symbol, in the context of objects and class
-    /// instances. We collect them so we can ensure their unicity when visiting dot expressions.
-    public var children: [Symbol] = []
-
     public let name: String
     public weak var scope: Scope?
 

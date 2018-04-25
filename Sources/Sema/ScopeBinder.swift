@@ -61,15 +61,13 @@ public struct ScopeBinder: ASTVisitor, Pass {
         try visit(node.owner)
         let symbol: Symbol = context[node.owner, "symbol"]!
 
-        // Look for a symbol of the same name in the owner's members, or create a new one.
+        // As we didn't implement a full-featured type inference, we can't infer which symbol is
+        // associated with the attribute of a dot-expression during borrow checking analysis. One
+        // workaround is to associates such attributes with the same symbol as their owner. This
+        // covers all use cases anyway, as creating an immutability constraint on the member of
+        // an object also freezes that object.
         context[node, "scope"] = symbol.scope
-        if let child = symbol.children.first(where: { $0.name == node.attribute }) {
-            context[node, "symbol"] = child
-        } else {
-            let child = Symbol(name: node.attribute)
-            symbol.scope?.add(symbol: child)
-            context[node, "symbol"] = child
-        }
+        context[node, "symbol"] = symbol
     }
 
     public mutating func visit(_ node: Identifier) throws {

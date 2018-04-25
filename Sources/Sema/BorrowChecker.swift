@@ -20,6 +20,7 @@ public struct BorrowChecker: ASTVisitor, Pass {
 
     // MARK: Statement processing
 
+    /// Processes a statement block.
     public mutating func visit(_ node: Block) throws {
         try visit(node.statements)
 
