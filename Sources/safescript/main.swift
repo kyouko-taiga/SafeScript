@@ -9,9 +9,6 @@ import Sema
 import Transpiler
 import Utils
 
-// Open the file containing `deepcopy`'s implementation.
-let deepcopyFile = try File(path: "deepcopy.js")
-
 // Read the input and output paths.
 if CommandLine.arguments.count < 2 {
     Console.err.print("error: ", in: [.bold, .red], terminator: "")
@@ -89,5 +86,5 @@ for i in 0 ..< passes.count {
 }
 
 var transpiler = try Transpiler(
-    output: File(path: outputPath!, mode: .write), deepcopyFile: deepcopyFile)
+    output: File(path: outputPath!, mode: .write))
 try transpiler.visit(ast)

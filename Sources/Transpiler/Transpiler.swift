@@ -3,11 +3,10 @@ import Utils
 
 public struct Transpiler: ASTVisitor {
 
-    public init(output: File, deepcopyFile: File?) throws {
+    public init(output: File) throws {
         self.output = output
 
         // Add the `deepcopy` function in preamble.
-        let deepcopy = try deepcopyFile?.read() ?? File(path: "deepcopy.js").read()
         self.output.write(data: deepcopy)
         self.output.write(data: "\n")
     }
