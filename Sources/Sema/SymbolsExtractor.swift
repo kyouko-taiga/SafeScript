@@ -30,23 +30,23 @@ public struct SymbolsExtractor: ASTVisitor, Pass {
         context[node, "innerScope"] = innerScope
 
         // Visit the block's statements.
-        self.scopes.push(innerScope)
+        scopes.push(innerScope)
         try self.visit(node.statements)
-        self.scopes.pop()
+        scopes.pop()
     }
 
     public mutating func visit(_ node: VarDecl) throws {
         // Make sure the property's name wasn't already declared.
-        if self.scopes.top!.defines(name: node.name) {
-            self.errors.append(DuplicateDeclaration(name: node.name, at: node.range))
+        if scopes.top!.defines(name: node.name) {
+            errors.append(DuplicateDeclaration(name: node.name, at: node.range))
         }
 
         // Create a new symbol for the property, and visit the node's declaration.
         let symbol = Symbol(name: node.name)
-        self.scopes.top!.add(symbol: symbol)
-        context[node, "scope"] = self.scopes.top
+        scopes.top!.add(symbol: symbol)
+        context[node, "scope"] = scopes.top
         context[node, "symbol"] = symbol
-        try self.traverse(node)
+        try traverse(node)
     }
 
 
@@ -59,16 +59,16 @@ public struct SymbolsExtractor: ASTVisitor, Pass {
         // Create a symbol for the function's name within the currently visited scope.
         let symbol = Symbol(name: node.name)
         scopes.top!.add(symbol: symbol)
-        context[node, "scope"] = self.scopes.top
+        context[node, "scope"] = scopes.top
         context[node, "symbol"] = symbol
 
         // Create a new scope for the function's parameters.
-        let innerScope = Scope(name: node.name, parent: self.scopes.top)
+        let innerScope = Scope(name: node.name, parent: scopes.top)
         scopes.push(innerScope)
         context[node, "innerScope"] = innerScope
 
         // Add the function's parameters to its inner scope.
-        try self.visit(node.parameters)
+        try visit(node.parameters)
 
         // Visit the function's body.
         // Note that we visit the statements directly, so as to avoid creating an additional
@@ -76,40 +76,40 @@ public struct SymbolsExtractor: ASTVisitor, Pass {
         // as that of the function body.
         context[node.body, "innerScope"] = innerScope
         for statement in node.body.statements {
-            try self.visit(statement)
+            try visit(statement)
         }
         scopes.pop()
     }
 
     public mutating func visit(_ node: ParamDecl) throws {
         // Make sure the parameter's name wasn't already declared.
-        if self.scopes.top!.defines(name: node.name) {
-            self.errors.append(DuplicateDeclaration(name: node.name, at: node.range))
+        if scopes.top!.defines(name: node.name) {
+            errors.append(DuplicateDeclaration(name: node.name, at: node.range))
         }
 
         // Create a new symbol for the parameter, and visit the node's declaration.
         let symbol = Symbol(name: node.name)
-        self.scopes.top!.add(symbol: symbol)
-        context[node, "scope"] = self.scopes.top
+        scopes.top!.add(symbol: symbol)
+        context[node, "scope"] = scopes.top
         context[node, "symbol"] = symbol
-        try self.traverse(node)
+        try traverse(node)
     }
 
     public mutating func visit(_ node: ClassDecl) throws {
         // Make sure the class name wasn't already declared.
-        if self.scopes.top!.defines(name: node.name) {
-            self.errors.append(DuplicateDeclaration(name: node.name, at: node.range))
+        if scopes.top!.defines(name: node.name) {
+            errors.append(DuplicateDeclaration(name: node.name, at: node.range))
         }
 
         // Create a new symbol for the class.
         let symbol = Symbol(name: node.name)
-        self.scopes.top!.add(symbol: symbol)
-        context[node, "scope"] = self.scopes.top
+        scopes.top!.add(symbol: symbol)
+        context[node, "scope"] = scopes.top
         context[node, "symbol"] = symbol
 
         // Visit the class body.
-        try self.traverse(node)
-        self.scopes.pop()
+        try traverse(node)
+        scopes.pop()
     }
 
     // MARK: Internals
