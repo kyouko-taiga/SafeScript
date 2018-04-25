@@ -22,18 +22,18 @@ public struct ScopeBinder: ASTVisitor, Pass {
         // a result, built-in symbols (e.g. `Math`) can be refered "as-is" within source code, yet
         // we don't loose the ability to shadow them.
         let innerScope: Scope = context[node, "innerScope"]!
-        innerScope.parent = self.scopes.top
+        innerScope.parent = scopes.top
 
-        self.scopes.push(innerScope)
-        try self.visit(node.statements)
-        self.scopes.pop()
+        scopes.push(innerScope)
+        try visit(node.statements)
+        scopes.pop()
     }
 
     public mutating func visit(_ node: VarDecl) throws {
         let scope: Scope = context[node, "scope"]!
-        self.underDeclaration[scope] = node.name
-        try self.traverse(node)
-        self.underDeclaration.removeValue(forKey: scope)
+        underDeclaration[scope] = node.name
+        try traverse(node)
+        underDeclaration.removeValue(forKey: scope)
     }
 
     public mutating func visit(_ node: FunDecl) throws {
@@ -45,20 +45,20 @@ public struct ScopeBinder: ASTVisitor, Pass {
         //
 
         // Visit the function.
-        self.scopes.push(context[node, "innerScope"]!)
-        try self.traverse(node)
-        self.scopes.pop()
+        scopes.push(context[node, "innerScope"]!)
+        try traverse(node)
+        scopes.pop()
     }
 
     public mutating func visit(_ node: ClassDecl) throws {
-        self.scopes.push(context[node, "innerScope"]!)
-        try self.visit(node.members)
-        self.scopes.pop()
+        scopes.push(context[node, "innerScope"]!)
+        try visit(node.members)
+        scopes.pop()
     }
 
     public mutating func visit(_ node: DotExpr) throws {
         // Find the scope that defines the owner of the visited expression.
-        try self.visit(node.owner)
+        try visit(node.owner)
         let symbol: Symbol = context[node.owner, "symbol"]!
 
         // Look for a symbol of the same name in the owner's members, or create a new one.
@@ -74,15 +74,15 @@ public struct ScopeBinder: ASTVisitor, Pass {
 
     public mutating func visit(_ node: Identifier) throws {
         // Find the scope that defines the visited identifier.
-        guard let scope = self.scopes.top!.findScopeDefining(name: node.name) else {
-            self.errors.append(UndefinedSymbol(name: node.name, at: node.range))
+        guard let scope = scopes.top!.findScopeDefining(name: node.name) else {
+            errors.append(UndefinedSymbol(name: node.name, at: node.range))
             return
         }
 
         // If we're visiting the initial value of the identifier's declaration (e.g. as part of a
         // property declaration), we should raise an undefined symbol error.
-        guard self.underDeclaration[scope] != node.name else {
-            self.errors.append(UndefinedSymbol(name: node.name, at: node.range))
+        guard underDeclaration[scope] != node.name else {
+            errors.append(UndefinedSymbol(name: node.name, at: node.range))
             return
         }
 
