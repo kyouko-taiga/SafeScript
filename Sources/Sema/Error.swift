@@ -17,10 +17,7 @@ public struct DuplicateDeclaration: SemanticError, CustomStringConvertible {
     public let range: SourceRange?
 
     public var description: String {
-        let location = self.range != nil
-            ? "\(self.range!.start)"
-            : "?:?"
-        return "\(location): duplicate declaration: \(name)"
+        return "duplicate declaration: \(name)"
     }
 
 }
@@ -36,10 +33,7 @@ public struct UndefinedSymbol: SemanticError, CustomStringConvertible {
     public let range: SourceRange?
 
     public var description: String {
-        let location = self.range != nil
-            ? "\(self.range!.start)"
-            : "?:?"
-        return "\(location): undefined symbol: \(name)"
+        return "undefined symbol: \(name)"
     }
 
 }
@@ -57,8 +51,7 @@ public struct UnexpectedNode: SemanticError, CustomStringConvertible {
     }
 
     public var description: String {
-        let location = "\(node.range.start)"
-        return "\(location): unexpected node: \(node)"
+        return "unexpected node: \(node)"
     }
 
 }
@@ -76,8 +69,7 @@ public struct NonReferenceableExpression: SemanticError, CustomStringConvertible
     }
 
     public var description: String {
-        let location = "\(node.range.start)"
-        return "\(location): non-referenceable expression: \(node)"
+        return "non-referenceable expression: \(node)"
     }
 
 }
@@ -93,10 +85,7 @@ public struct ReferenceError: SemanticError, CustomStringConvertible {
     public let range: SourceRange?
 
     public var description: String {
-        let location = self.range != nil
-            ? "\(self.range!.start)"
-            : "?:?"
-        return "\(location): reference error: \(symbol.name)"
+        return "reference error: \(symbol.name)"
     }
 
 }
@@ -112,10 +101,7 @@ public struct BorrowError: SemanticError, CustomStringConvertible {
     public let range: SourceRange?
 
     public var description: String {
-        let location = self.range != nil
-            ? "\(self.range!.start)"
-            : "?:?"
-        return "\(location): \(reason)"
+        return reason
     }
 
 }
@@ -131,10 +117,7 @@ public struct TypeError: SemanticError, CustomStringConvertible {
     public let range: SourceRange?
 
     public var description: String {
-        let location = self.range != nil
-            ? "\(self.range!.start)"
-            : "?:?"
-        return "\(location): \(reason)"
+        return reason
     }
 
 }
