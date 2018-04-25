@@ -278,32 +278,6 @@ public struct BorrowChecker: ASTVisitor, Pass {
 
     // MARK: Expression typing
 
-//    private mutating func type(of node: Node) -> SafeScriptType {
-//        switch node {
-//        case let n as Identifier   : return type(of: n)
-//        case let n as ScalarLiteral: return type(of: n)
-//        default:
-//            errors.append(UnexpectedNode(node: node))
-//            return GroundType.undefined
-//        }
-//    }
-//
-//    private mutating func type(of node: Identifier) -> SafeScriptType {
-//        let symbol: Symbol = context[node, "symbol"]!
-//        return types[symbol] ?? GroundType.undefined
-//    }
-//
-//    private mutating func type(of node: ScalarLiteral) -> SafeScriptType {
-//        switch node.value {
-//        case is Int, is Double:
-//            return GroundType.number
-//        case is String:
-//            return GroundType.string
-//        default:
-//            return GroundType.undefined
-//        }
-//    }
-
     /// Returns the effective permissions of the given symbol.
     private func effectivePermissions(of symbol: Symbol) -> Set<Permission> {
         let symbolPermissions = permissions[symbol] ?? []
