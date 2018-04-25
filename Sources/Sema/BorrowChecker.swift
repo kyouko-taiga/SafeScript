@@ -56,6 +56,7 @@ public struct BorrowChecker: ASTVisitor, Pass {
         // Handle initial bindings.
         if let (op, value) = node.initialBinding {
             do {
+                try visit(value)
                 if op == .copy {
                     try makeCopyBinding(to: symbol, at: node.range)
                 } else {
@@ -78,6 +79,7 @@ public struct BorrowChecker: ASTVisitor, Pass {
             else { throw NonReferenceableExpression(node: node) }
 
         do {
+            try visit(node.rvalue)
             if node.op == .copy {
                 try makeCopyBinding(to: destination, at: node.range)
             } else {
