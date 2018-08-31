@@ -57,7 +57,7 @@ obj1.foo = 10
 ```
 
 The language still allows reference copies,
-but gives then a dedicated operator:
+but gives them a dedicated operator:
 
 ```
 let obj1: mutable = { foo: 0, bar: 1 }
