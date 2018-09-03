@@ -45,8 +45,8 @@ all objects are immutable by default,
 and a copy is always a deep copy.
 
 ```
-let obj1 = { foo: 0, bar: 1 }
-let obj2: mutable = obj1
+var obj1 = { foo: 0, bar: 1 }
+var obj2: mut = obj1
 
 obj2.foo = 10
 console.log(obj1.foo)
@@ -60,8 +60,8 @@ The language still allows reference copies,
 but gives them a dedicated operator:
 
 ```
-let obj1: mutable = { foo: 0, bar: 1 }
-let obj2: mutable &- obj1
+var obj1: mutable = { foo: 0, bar: 1 }
+var obj2: mutable &- obj1
 
 obj2.foo = 10
 console.log(obj1.foo)
