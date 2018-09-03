@@ -173,10 +173,11 @@ extension Lexer: IteratorProtocol, Sequence {
             case "delete"     : kind = .delete
             case "await"      : kind = .await
             case "let"        : kind = .let
-            case "const"      : kind = .const
-            case "mutable"    : kind = .mutable
+            case "var"        : kind = .var
+            case "mut"        : kind = .mut
+            case "cst"        : kind = .cst
             case "async"      : kind = .async
-            case "function"   : kind = .function
+            case "func"       : kind = .func
             case "static"     : kind = .static
             case "class"      : kind = .class
             case "new"        : kind = .new

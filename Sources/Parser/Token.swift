@@ -70,10 +70,11 @@ public enum TokenKind: String {
     // MARK: Keywords
 
     case `let`
-    case const
-    case mutable
+    case `var`
+    case cst
+    case mut
     case async
-    case function
+    case `func`
     case `static`
     case `class`
     case new

@@ -18,9 +18,9 @@ extension Parser {
             return try parseReturn()
         case .yield:
             return try parseYield()
-        case .let, .const:
+        case .let, .var:
             return try parseVarDecl()
-        case .function:
+        case .func:
             return try parseFunDecl()
 
         default:
@@ -31,8 +31,8 @@ extension Parser {
     }
 
     func parseVarDecl() throws -> VarDecl {
-        guard let startToken = consume(if: { $0.kind == .let || $0.kind == .const })
-            else { throw unexpectedToken(expected: "'let' or 'const'") }
+        guard let startToken = consume(if: { $0.kind == .let || $0.kind == .var })
+            else { throw unexpectedToken(expected: "'let' or 'var'") }
 
         // Parse the name of the property.
         guard let name = consume(.identifier, afterMany: .newline)
@@ -42,9 +42,9 @@ extension Parser {
         // Parse the optional mutability qualifier.
         var qualifier: MutabilityQualifer? = nil
         if consume(.colon, afterMany: .newline) != nil {
-            guard let q = consume(if: { $0.kind == .mutable || $0.kind == .const })
+            guard let q = consume(if: { $0.kind == .mut || $0.kind == .cst })
                 else { throw unexpectedToken(expected: "mutability qualifier") }
-            qualifier = MutabilityQualifer(rawValue: q.kind.rawValue)
+            qualifier = MutabilityQualifer(token: q.kind)
             end = q.range.end
         }
 
@@ -64,15 +64,15 @@ extension Parser {
         return VarDecl(
             name: name.value!,
             attributes: [],
-            reassignable: startToken.kind == .let,
+            reassignable: startToken.kind == .var,
             mutability: qualifier ?? .const,
             initialBinding: initialBinding,
             range: SourceRange(from: startToken.range.start, to: end))
     }
 
     func parseFunDecl() throws -> FunDecl {
-        guard let startToken = consume(.function)
-            else { throw unexpectedToken(expected: "function") }
+        guard let startToken = consume(.func)
+            else { throw unexpectedToken(expected: "func") }
 
         // Parse the name of the function.
         guard let name = consume(.identifier, afterMany: .newline)?.value
@@ -88,9 +88,9 @@ extension Parser {
         // Parse the optional return annotation.
         var qualifier: MutabilityQualifer = .const
         if consume(.colon, afterMany: .newline) != nil {
-            guard let q = consume(if: { $0.kind == .mutable || $0.kind == .const })
+            guard let q = consume(if: { $0.kind == .mut || $0.kind == .cst })
                 else { throw unexpectedToken(expected: "mutability qualifier") }
-            qualifier = MutabilityQualifer(rawValue: q.kind.rawValue)!
+            qualifier = MutabilityQualifer(token: q.kind)!
         }
 
         // Parse the function body.
@@ -114,9 +114,9 @@ extension Parser {
         // Parse the optional type annotation.
         var qualifier: MutabilityQualifer = .const
         if consume(.colon, afterMany: .newline) != nil {
-            guard let q = consume(if: { $0.kind == .mutable || $0.kind == .const })
+            guard let q = consume(if: { $0.kind == .mut || $0.kind == .cst })
                 else { throw unexpectedToken(expected: "mutability qualifier") }
-            qualifier = MutabilityQualifer(rawValue: q.kind.rawValue)!
+            qualifier = MutabilityQualifer(token: q.kind)!
             end = q.range.end
         }
 
@@ -210,6 +210,18 @@ extension Parser {
         return Block(
             statements: statements,
             range: SourceRange(from: startToken.range.start, to: endToken.range.end))
+    }
+
+}
+
+extension MutabilityQualifer {
+
+    init?(token: TokenKind) {
+        switch token {
+        case .mut: self = .mutable
+        case .cst: self = .const
+        default  : return nil
+        }
     }
 
 }
