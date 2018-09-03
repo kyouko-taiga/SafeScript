@@ -186,7 +186,11 @@ public struct Transpiler: ASTVisitor {
     }
 
     public mutating func visit(_ node: ScalarLiteral) throws {
-        dump(String(describing: node.value))
+        if let string = node.value as? String {
+            dump("\"\(string)\"")
+        } else {
+            dump(String(describing: node.value))
+        }
     }
 
     public mutating func visit(_ node: ArrayLiteral) throws {
