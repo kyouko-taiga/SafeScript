@@ -1,6 +1,6 @@
-let x: mutable = 0
+var x: mut = 0
 {
-  let y &- x
+  var y &- x
 }
 x = 1
 console.log(x)

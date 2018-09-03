@@ -1,5 +1,5 @@
-let x = { a: 0, b: 1 }
-let y: mutable = x
+var x = { a: 0, b: 1 }
+var y: mut = x
 y.a = 2
 
 console.log(x)

@@ -1,4 +1,4 @@
-let x: mutable = 0
+var x: mut = 0
 x = 1
-let y &- x
+var y &- x
 x = 2  // error: cannot mutate immutable object
